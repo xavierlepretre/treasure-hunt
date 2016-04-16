@@ -1,0 +1,89 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="/" />
+  <title>WalkDog - Walker App</title>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link href="./app.css" rel='stylesheet' type='text/css'>
+  <script src="./app.js"></script>
+  <script src="./walkDog.js"></script>
+</head>
+<body ng-app="proofsApp" ng-controller="walkDogController">
+  <h1>WalkDog</h1>
+  <h2>Walker Dapp</h2>
+
+  <h3>My Info</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Address</th>
+        <td>{{ walkDogAddress }}</td>
+      </tr>
+      <tr>
+        <th>Owner Address</th>
+        <td>{{ owner.address }}</td>
+      </tr>
+      <tr>
+        <th>Walker Address</th>
+        <td>{{ walkDogInfo.walker }}</td>
+      </tr>
+      <tr>
+        <th>Walker Balance</th>
+        <td>{{ walkDogInfo.walkerBalance }} Wei</td>
+      </tr>
+      <tr>
+        <th>Reward</th>
+        <td>{{ walkDogInfo.value }} Wei</td>
+      </tr>
+      <tr>
+        <th>Proof</th>
+        <td>
+          <a href="/">{{ walkDogInfo.proof }}</a>
+        </td>
+      </tr>
+      <tr>
+        <th>Major</th>
+        <td>{{ walkDogInfo.major }}</td>
+      </tr>
+      <tr>
+        <th>Time Limit</th>
+        <td>{{ walkDogInfo.timeLimit }}</td>
+      </tr>
+      <tr>
+        <th>Minor</th>
+        <td>{{ walkDogInfo.minor }}</td>
+      </tr>
+    </thead>
+  </table>
+
+  <h3>Actions</h3>
+
+  <fieldset>
+    <legend>Update Minor</legend>
+
+    <label for="newMinor">New Minor:</label>
+    <input 
+      id="newMinor" 
+      type="text" 
+      ng-model="newMinor" 
+      placeholder="Paste a string here..."/>
+
+    <br>
+    <button ng-click="updateMinor(newMinor)">Update</button>
+
+  </fieldset> 
+
+  <fieldset>
+    <legend>Complete Walk</legend>
+
+    <button ng-click="completeWalk()">Complete Walk</button>
+
+  </fieldset> 
+
+  <br><br>
+  <span id="status"></span>
+</body>
+</html>
