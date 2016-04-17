@@ -11,6 +11,9 @@ function getOwnerAddress (contract, $scope, owner) {
 		.then(function (result) {
 			$scope.$apply(function () {
 				owner.address = result;
+				owner.balance = web3.eth.getBalance(result);
+				owner.balanceInFinney = web3.fromWei(owner.balance, "finney");
+				owner.balanceInEther = web3.fromWei(owner.balance, "ether");
 			});
 		});
 }

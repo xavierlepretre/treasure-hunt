@@ -9,6 +9,7 @@ contract WalkDog is UsingOraclize {
 	bytes32 public major;
 	uint public timeLimit;
 	string public minor;
+	uint public minorTimestamp;
 
 	function WalkDog(address _walker, address _proof, bytes32 _major, uint _timeLimit) {
 		owner = msg.sender;
@@ -49,17 +50,18 @@ contract WalkDog is UsingOraclize {
 	function setMinor(string _minor) 
 		onlyWalker() {
 		minor = _minor;
+		minorTimestamp = now;
 	}
 
 	function completeWalk() {
-		Prover(proof).proveMe.value(msg.value)(major);
+		Prover(proof).proveMe.value(msg.value)(major, minorTimestamp);
 	}
 
 	function prove(string _hash) 
 		onlyProof() {
 		if (now <= timeLimit)
 		{
-			oraclize_query("URL", strConcat("json(http://gateway.ipfs.io/ipfs/", _hash, ").minor"));
+			oraclize_query("URL", strConcat("json(http://gateway.ipfs.io/ipfs/", _hash, ")"));
 		} else {
 			kill();
 		}
@@ -67,6 +69,7 @@ contract WalkDog is UsingOraclize {
 
 	function __callback(bytes32 myid, string _minor) 
 		onlyOraclize() {
+
 	 	if (strCompare(minor, _minor) == 0) {
 			suicide(walker);
 		}

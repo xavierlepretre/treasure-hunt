@@ -9,19 +9,26 @@ app.controller("beaconController", [ '$scope', '$location', '$http', '$q', funct
 	$scope.beaconAddress = $location.search().address;
 	$scope.beaconInfo = {};
 	$scope.beaconBalance = web3.eth.getBalance($scope.beaconAddress);
+	$scope.beaconBalanceInFinney = web3.fromWei($scope.beaconBalance, "finney");
 
 	getBeaconInfoAtAddress(Proofs.deployed(), $scope, $scope.beaconInfo, $scope.beaconAddress);
 
 	$scope.updateMinor = function (newBeaconMinor) {
-		// TODO
+		var traceUpdate = createTraceUpdate($scope.beaconInfo, newBeaconMinor);
+		console.log(traceUpdate);
+		putTraceUpdate(Proofs.deployed(), $scope, $scope.beaconInfo, traceUpdate, $scope.beaconAddress);
 	};
 
 	$scope.updateHash = function (newBeaconHash) {
-		updateHashAt(
+		updatePreviousHashAt(
 			Proofs.deployed(), 
 			$scope,
 			$scope.beaconInfo,
 			newBeaconHash);
 	};
+
+	$scope.init = function() {
+		getIpfsId($scope);
+	}
 
 }]);

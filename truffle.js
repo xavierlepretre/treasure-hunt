@@ -8,19 +8,29 @@ module.exports = {
     ],
     "proofs.js": [
       "javascripts/_vendor/angular.js",
+      "javascripts/_vendor/ipfsapi.js",
+      "javascripts/_vendor/ipfs.js",
       "javascripts/ownerMethods.js",
+      "javascripts/ipfsMethods.js",
       "javascripts/proofsMethods.js",
       "javascripts/walkDogMethods.js",
       "javascripts/proofsController.js"
     ],
     "beacon.js": [
       "javascripts/_vendor/angular.js",
+      "javascripts/_vendor/ipfsapi.js",
+      "javascripts/_vendor/ipfs.js",
+      "javascripts/ipfsMethods.js",
       "javascripts/proofsMethods.js",
+      "javascripts/beaconMethods.js",
       "javascripts/beaconController.js"
     ],
     "walkDog.js": [
       "javascripts/_vendor/angular.js",
+      "javascripts/_vendor/ipfsapi.js",
+      "javascripts/_vendor/ipfs.js",
       "javascripts/ownerMethods.js",
+      "javascripts/proofsMethods.js",
       "javascripts/walkDogMethods.js",
       "javascripts/walkDogController.js",
     ],

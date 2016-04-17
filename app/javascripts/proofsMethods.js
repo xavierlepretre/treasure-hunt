@@ -1,9 +1,14 @@
 /**
 * ProofInfo = {
-      minValue	
+*     minValue	
+*     minValueInFinney
+*     balance
+*     balanceInFinney
 * }
 */
 function getProofInfo(proofs, $scope, proofInfo) {
+	proofInfo.balance = web3.eth.getBalance(proofs.address);
+	proofInfo.balanceInFinney = web3.fromWei(proofInfo.balance, "finney");
 	proofs.minValue()
 		.catch(function (e) {
 			console.error("Failed to proofs.minValue(), " + e);
@@ -11,6 +16,7 @@ function getProofInfo(proofs, $scope, proofInfo) {
 		.then(function (minValue) {
 			$scope.$apply(function() {
 				proofInfo.minValue = minValue;
+				proofInfo.minValueInFinney = web3.fromWei(minValue, "finney");
 			});
 		});
 }
@@ -19,12 +25,15 @@ function getProofInfo(proofs, $scope, proofInfo) {
 * BeaconInfo = {
 *     address,
 *     major,
-*     hash,
+*     previousHash,
+*     currentHash,
 *     index	
+*     balance
+*     balanceInFinney
 * }
 */
 function getBeacons(proofs, $scope, $q, beaconInfos) {
-	proofs.getMajorsCount.call()
+	return proofs.getMajorsCount.call()
 		.catch(function (e) {
 			console.error("Failed to proofs.getMajorsCount(), " + e);
 		})
@@ -50,20 +59,20 @@ function getBeaconInfoAtIndex(proofs, $scope, beaconInfos, index) {
 				});
 		})
 		.then(function (address) {
-			return proofs.beacons(address)
-				.catch(function (e) {
-					console.error("Failed to proofs.beacons(" + address + "), " + e);
-				})
-				.then(function (beaconInfo) {
-					$scope.$apply(function () {
-						beaconInfos.push({
-							"index": index,
-							"major": web3.toAscii(beaconInfo[0]),
-							"hash": beaconInfo[1],
-							"address": address
-						});
-					});
-				});
+			var beaconInfo = {
+				"index": index
+			};
+			return getBeaconInfoAtAddress(proofs, $scope, beaconInfo, address);
+		});
+}
+
+function getBeaconInfoAtMajor(proofs, $scope, beaconInfo, major) {
+	return proofs.addresses(major)
+		.catch(function(e) {
+			console.error("Failed to proofs.addresses(" + major + "), " + e);
+		})
+		.then(function (address) {
+			return getBeaconInfoAtAddress(proofs, $scope, beaconInfo, address);
 		});
 }
 
@@ -75,18 +84,20 @@ function getBeaconInfoAtAddress(proofs, $scope, beaconInfo, address) {
 		.then(function (received) {
 			$scope.$apply(function () {
 				beaconInfo.major = web3.toAscii(received[0]);
-				beaconInfo.hash = received[1];
+				beaconInfo.previousHash = received[1];
 				beaconInfo.address = address;
+				beaconInfo.balance = web3.eth.getBalance(address);
+				beaconInfo.balanceInFinney = web3.fromWei(beaconInfo.balance, "finney")
 			});
-		})
+		});
 }
 
 function addBeaconTo(proofs, $scope, beaconInfos, adminAccount, newBeaconInfo) {
-	proofs.addBeacon(
+	return proofs.addBeacon(
 		newBeaconInfo.address,
 		newBeaconInfo.major,
-		newBeaconInfo.hash,
-		{ from: adminAccount, gas: BOOM_GAS })
+		newBeaconInfo.previousHash,
+		{ "from": adminAccount, "gas": BOOM_GAS })
 		.catch(function (e) {
 			console.error("Failed to proofs.addBeaconTo(" + newBeaconInfo.address 
 				+ ", " + newBeaconInfo.major
@@ -106,23 +117,25 @@ function addBeaconTo(proofs, $scope, beaconInfos, adminAccount, newBeaconInfo) {
 				beaconInfos.push({
 					"address": newBeaconInfo.address,
 					"major": newBeaconInfo.major,
-					"hash": newBeaconInfo.hash,
+					"previousHash": newBeaconInfo.previousHash,
+					"balance": web3.eth.getBalance(newBeaconInfo.address),
+					"balanceInFinney": web3.fromWei(web3.eth.getBalance(newBeaconInfo.address), "finney"),
 					"adding": true
 				});
 			});
 		});	
 }
 
-function updateHashAt(proofs, $scope, beaconInfo, newBeaconHash) {
-	proofs.updatePrevious(
-		newBeaconHash,
-		{ from: beaconInfo.address, gas: BOOM_GAS })
+function updatePreviousHashAt(proofs, $scope, beaconInfo, newBeaconPreviousHash) {
+	return proofs.updatePrevious(
+		newBeaconPreviousHash,
+		{ "from": beaconInfo.address, "gas": BOOM_GAS })
 		.catch(function (e) {
-			console.error("Failed to proofs.updatePrevious(" + beaconInfo.address + "), " + e);
+			console.error("Failed to proofs.updatePrevious(" + newBeaconPreviousHash + "), " + e);
 		})
 		.then(function (txn) {
 			$scope.$apply(function () {
-				beaconInfo.hash = newBeaconHash;
+				beaconInfo.previousHash = newBeaconPreviousHash;
 			});
 		});
 }

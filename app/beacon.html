@@ -8,7 +8,7 @@
   <script src="./app.js"></script>
   <script src="./beacon.js"></script>
 </head>
-<body ng-app="proofsApp" ng-controller="beaconController">
+<body ng-app="proofsApp" ng-controller="beaconController" ng-init='load()'>
   <h1>Beacon</h1>
   <h2>Default Beacon Dapp</h2>
 
@@ -18,19 +18,24 @@
     <tbody>
       <tr>
         <th>Address</th>
-        <td>{{ beaconInfo.address }}</td>
+        <td colspan="2">{{ beaconInfo.address }}</td>
       </tr>
       <tr>
         <th>Major</th>
-        <td>{{ beaconInfo.major }}</td>
+        <td colspan="2">{{ beaconInfo.major }}</td>
       </tr>
       <tr>
         <th>Hash</th>
-        <td>{{ beaconInfo.hash }}</td>
+        <td colspan="2">
+          <a ng-href="http://localhost:8000/ipfs/{{ beaconInfo.hash }}" target="_self">
+            {{ beaconInfo.hash }}
+          </a>
+        </td>
       </tr>
       <tr>
         <th>Balance</th>
         <td>{{ beaconBalance }} Wei</td>
+        <td>{{ beaconBalanceInFinney }} Finney</td>
       </tr>
     </tbody>
   </table>

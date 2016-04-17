@@ -5,7 +5,7 @@
 (function() {
 
   var contract_data = {
-    abi: [{"constant":false,"inputs":[{"name":"major","type":"bytes32"}],"name":"proveMe","outputs":[],"type":"function"}],
+    abi: [{"constant":false,"inputs":[{"name":"major","type":"bytes32"},{"name":"updatedTimestamp","type":"uint256"}],"name":"proveMe","outputs":[],"type":"function"}],
     binary: "",
     unlinked_binary: "",
     address: "",

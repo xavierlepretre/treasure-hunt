@@ -18,43 +18,72 @@
     <thead>
       <tr>
         <th>Address</th>
-        <td>{{ walkDogAddress }}</td>
+        <td colspan="2">{{ walkDogAddress }}</td>
       </tr>
       <tr>
         <th>Owner Address</th>
-        <td>{{ owner.address }}</td>
+        <td colspan="2">{{ owner.address }}</td>
       </tr>
       <tr>
         <th>Walker Address</th>
-        <td>{{ walkDogInfo.walker }}</td>
+        <td colspan="2">{{ walkDogInfo.walker }}</td>
       </tr>
       <tr>
         <th>Walker Balance</th>
         <td>{{ walkDogInfo.walkerBalance }} Wei</td>
+        <td>{{ walkDogInfo.walkerBalanceInFinney }} Finney</td>
       </tr>
       <tr>
         <th>Reward</th>
-        <td>{{ walkDogInfo.value }} Wei</td>
+        <td>{{ walkDogInfo.reward }} Wei</td>
+        <td>{{ walkDogInfo.rewardInFinney }} Finney</td>
       </tr>
       <tr>
         <th>Proof</th>
-        <td>
+        <td colspan="2">
           <a href="/">{{ walkDogInfo.proof }}</a>
         </td>
       </tr>
       <tr>
         <th>Major</th>
-        <td>{{ walkDogInfo.major }}</td>
+        <td colspan="2">{{ walkDogInfo.major }}</td>
       </tr>
       <tr>
         <th>Time Limit</th>
-        <td>{{ walkDogInfo.timeLimit }}</td>
+        <td colspan="2">{{ walkDogInfo.timeLimit }}</td>
       </tr>
       <tr>
         <th>Minor</th>
-        <td>{{ walkDogInfo.minor }}</td>
+        <td colspan="2">{{ walkDogInfo.minor }}</td>
       </tr>
     </thead>
+  </table>
+
+  <h3>Beacon Info</h3>
+
+  <table>
+    <tbody>
+      <tr>
+        <th>Address</th>
+        <td>
+          <a ng-href="/beacon.html?address={{ walkDogInfo.beaconInfo.address }}" target="_self">
+            {{ walkDogInfo.beaconInfo.address }}
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>Major</th>
+        <td>{{ walkDogInfo.beaconInfo.major }}</td>
+      </tr>
+      <tr>
+        <th>Previous Hash</th>
+        <td>
+          <a ng-href="http://localhost:8000/ipfs/{{ walkDogInfo.beaconInfo.hash }}" target="_self">
+            {{ walkDogInfo.beaconInfo.hash }}
+          </a>
+        </td>
+      </tr>
+    </tbody>
   </table>
 
   <h3>Actions</h3>

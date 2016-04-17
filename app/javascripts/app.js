@@ -20,4 +20,7 @@ window.onload = function() {
     account = accounts[0];
 
   });
+
+  ipfs.api = window.ipfsAPI('localhost', '5001')
+
 }

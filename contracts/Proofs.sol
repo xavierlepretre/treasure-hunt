@@ -7,7 +7,8 @@ contract Proofs is Prover {
 
 	struct Beacon {
 		bytes32 major;
-		string hash;
+		string previousHash;
+		uint updatedTimestamp;
 		uint index;
 	}
 
@@ -15,7 +16,7 @@ contract Proofs is Prover {
 	mapping(bytes32 => address) public addresses;
 	bytes32[] public majors;
 
-	event onUpdatedPrevious(bytes32 major, string hash);
+	event onUpdatedPrevious(bytes32 major, string previousHash, uint updatedTimestamp);
 
 	function Proofs() {
 		owner = msg.sender;
@@ -40,16 +41,16 @@ contract Proofs is Prover {
 		return majors.length;
 	}
 
-	function addBeacon(address beacon, bytes32 major, string hash) 
+	function addBeacon(address beacon, bytes32 major, string previousHash) 
 		onlyOwner() {
 		if (addresses[major] != 0) {
 			throw;
 		}
 		uint index = majors.length;
-		beacons[beacon] = Beacon(major, hash, index);
+		beacons[beacon] = Beacon(major, previousHash, now, index);
 		addresses[major] = beacon;
 		majors.push(major);
-		onUpdatedPrevious(major, hash);
+		onUpdatedPrevious(major, previousHash, now);
 	}
 
 	function removeBeacon(address beacon) 
@@ -63,14 +64,19 @@ contract Proofs is Prover {
 		beacons[addresses[majors[index]]].index = index;
 	}
 
-	function updatePrevious(string hash) {
-		beacons[msg.sender].hash = hash;
-		onUpdatedPrevious(beacons[msg.sender].major, hash);
+	function updatePrevious(string previousHash) {
+		beacons[msg.sender].previousHash = previousHash;
+		beacons[msg.sender].updatedTimestamp = now;
+		onUpdatedPrevious(beacons[msg.sender].major, previousHash, now);
 	}
 
-	function proveMe(bytes32 major) 
+	function proveMe(bytes32 major, uint updatedTimestamp) 
 		hasPayment() {
 		address beacon = addresses[major];
-		NeedProof(msg.sender).prove(beacons[beacon].hash);
+		if (beacons[beacon].updatedTimestamp < updatedTimestamp) {
+			// It means that NeedProof updated its info too recently
+			throw;
+		}
+		NeedProof(msg.sender).prove(beacons[beacon].previousHash);
 	}
 }

@@ -1,3 +1,3 @@
 contract Prover {
-	function proveMe(bytes32 major);
+	function proveMe(bytes32 major, uint updatedTimestamp);
 }

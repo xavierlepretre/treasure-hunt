@@ -1,15 +1,17 @@
 /**
 * walkDogInfo = {
-*     value
 *     walker
+*     reward
+*     rewardInFinney
 *     walkerBalance
+*     walkerBalanceInFinney
 *     proof
 *     major
 *     timeLimit	
 *     minor
 * }
 */
-function getWalkDogInfo(walkDog, $scope, walkDogInfo) {
+function getWalkDogInfo(proofs, walkDog, $scope, walkDogInfo) {
 	walkDog.walker()
 		.catch(function (e) {
 			console.error("Failed to walkDog.walker(), " + e);
@@ -19,6 +21,9 @@ function getWalkDogInfo(walkDog, $scope, walkDogInfo) {
 			$scope.$apply(function () {
 				walkDogInfo.walker = walker;
 				walkDogInfo.walkerBalance = web3.eth.getBalance(walker);
+				walkDogInfo.walkerBalanceInFinney = web3.fromWei(
+					walkDogInfo.walkerBalance,
+					"finney");
 			});
 		})
 
@@ -42,6 +47,7 @@ function getWalkDogInfo(walkDog, $scope, walkDogInfo) {
 			$scope.$apply(function () {
 				walkDogInfo.major = web3.toAscii(major);
 			});
+			getBeaconInfoAtMajor(proofs, $scope, walkDogInfo.beaconInfo, major);
 		})
 
 	walkDog.timeLimit()

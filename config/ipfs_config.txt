@@ -1,0 +1,88 @@
+{
+  "API": {
+    "HTTPHeaders": {
+        "Access-Control-Allow-Origin": ["*"],
+        "Access-Control-Allow-Methods": ["PUT", "GET", "POST"],
+        "Access-Control-Allow-Credentials": ["true"]
+    }
+  },
+  "Addresses": {
+    "API": "/ip4/0.0.0.0/tcp/5001",
+    "Gateway": "/ip4/0.0.0.0/tcp/8080",
+    "Swarm": [
+      "/ip4/0.0.0.0/tcp/4001",
+      "/ip6/::/tcp/4001"
+    ]
+  },
+  "Bootstrap": [
+    "/ip4/104.131.131.82/tcp/4001/ipfs/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ",
+    "/ip4/104.236.176.52/tcp/4001/ipfs/QmSoLnSGccFuZQJzRadHn95W2CrSFmZuTdDWP8HXaHca9z",
+    "/ip4/104.236.179.241/tcp/4001/ipfs/QmSoLPppuBtQSGwKDZT2M73ULpjvfd3aZ6ha4oFGL1KrGM",
+    "/ip4/162.243.248.213/tcp/4001/ipfs/QmSoLueR4xBeUbY9WZ9xGUUxunbKWcrNFTDAadQJmocnWm",
+    "/ip4/128.199.219.111/tcp/4001/ipfs/QmSoLSafTMBsPKadTEgaXctDQVcqN88CNLHXMkTNwMKPnu",
+    "/ip4/104.236.76.40/tcp/4001/ipfs/QmSoLV4Bbm51jM9C4gDYZQ9Cy3U6aXMJDAbzgu2fzaDs64",
+    "/ip4/178.62.158.247/tcp/4001/ipfs/QmSoLer265NRgSp2LA3dPaeykiS1J6DifTC88f5uVQKNAd",
+    "/ip4/178.62.61.185/tcp/4001/ipfs/QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3",
+    "/ip4/104.236.151.122/tcp/4001/ipfs/QmSoLju6m7xTh3DuokvT3886QRYqxAzb1kShaanJgW36yx"
+  ],
+  "Datastore": {
+    "GCPeriod": "",
+    "NoSync": false,
+    "Params": null,
+    "Path": "",
+    "StorageGCWatermark": 90,
+    "StorageMax": "10GB",
+    "Type": ""
+  },
+  "Discovery": {
+    "MDNS": {
+      "Enabled": true,
+      "Interval": 10
+    }
+  },
+  "Gateway": {
+    "HTTPHeaders": null,
+    "PathPrefixes": [],
+    "RootRedirect": "",
+    "Writable": false
+  },
+  "Identity": {
+    "PeerID": "QmURu6yFxvzR6hH3SXaFiwu1qeGNreUMc6p4gJ39jq6iyT",
+    "PrivKey": "CAASqQkwggSlAgEAAoIBAQDdA7cKdeLmTJDF2GlEb7KG8aRdeTOSL6kAP8QCnq4N6kCBa4uhIcf4kVDIWTZ4aM2YzPH6uE/Bu9zxc3fB1iCH6lmpB2M38J+tcN0y4Hhzyry4fJVB7pscNfYHhvIG8s1AWZdmvRnpiKUbjYVuJAftlub1pYx0O7gxugqRIZIp9szpha+ilzjYVPSeXURlHBQ9yE1r2pfeKvC7DaWMhk5tu8C5JwLSIHJkIZK7Cg14C7jHfZKkzltyfwZfbRMI4jlOBt9mMnDdxFL1/lj/QQTfi0Jhf6ANKJnmIKd/LNTwZstOOJxspE59AHQAejJokyuH2eeRFtPCDf7j+6KKixjtAgMBAAECggEBALXqU+QZSkzTIqqmSWcaJTErfmWt2EPwVMOuuLCLWap8cOHV2pUjUAyJ15tAyzPq16d4sYfz4zoMXnyi1STIEfitbWVSfllSBqxk5Lz2xE5Sxml3qgcd1bAvvjVN3rLXcRgRZiwbZFOztGrsXrJcl+X4ulvhCq21ZhQQFJiGsF82jLcgNiY9ooQR5C3Tlb5LWuePsyDRcJJ+wsqIrvlmVu0otEpE5CRDRun6ZLffnZoul9FvmTDR6tNC3Cf+B6u4NAQI00TyoIhvweb4EVdCW3IjA9sodgZ2W//V3cKfN9CRAOoSzIOXRfhSaTnDg+elmdEUll3Ijv5hdu/qvJDwRgUCgYEA7AWtVEwDRw7K/VxkoqnXXcja/8aF9lew1PB6STLh8LrxN8GxhDpmGXiV2d4CppzPvsy2W2tWMFdLZFT5d9BZjOo6g2rg8cyqWfK/YICGaKjB1TNYpIrZUO1BgDWJ0wDCy5R0GJa8Z3dJPPCcMtHy/B4mkMUINbGyoqCRgZlPtG8CgYEA77jW6aurlFhHmGkVAjaTpw/almjynXkFbZ27FIvr+lMkbn/tSOc9sJxhZqWRiLkXqXj5poxeHuKWHWNo6ADmaadqnn/NG0vtq2WxJHjr7LkrXB0eRyM9symBvDxF13enmUKCH7el4bMTfSV5zsSg7ZdCAPCiCSW0sWGdAqRpzmMCgYEAhcwyFjeBJCceq8JUymG91Uyn2ZeRGbVcaVpp+FUAAJf5ZsJG/86bUpUpXfidSBZdLqyeM/UFRyI1ewsw4Nsb6OZfhWBxZKHBcHxMQUia6XnBaDtTZPPRfi8BkszG9PbZds8RgV7yLzVQL1u3MJgURxhQhIEtxkKWIdskoXNn28ECgYB/imQtZnyfLGjLGf1ndAoStEikBaovRhgxPd4vDFK8mEel0sI4K2+S62CW8DgB+hgwvoB0r/HTlNIxSJaj+Pad98iuE2jYwQjuS+h3cy5ygAIlvAhD6OgGzmqL77Vo8exlihEZNug2sMQJrUqlS9AjGHqxbVWIcFs2lKyonzj76QKBgQDpfIVnacYAJYwkRZL5TICuYLHJiXNHbpX8WloXmYz6v5gbacjS/mQHFwIUfRM6gswP9ImM5yrNLMt2whLPOuekEFI5qXaYW6/5hg+hgpqQn7N5LVCFEW7EwNzaco3Xnii/btlbI08hY4EeWLFiMuMEwxRkTpMCt7aIpf0LafvjcA=="
+  },
+  "Ipns": {
+    "RecordLifetime": "",
+    "RepublishPeriod": "",
+    "ResolveCacheSize": 128
+  },
+  "Mounts": {
+    "FuseAllowOther": false,
+    "IPFS": "/ipfs",
+    "IPNS": "/ipns"
+  },
+  "SupernodeRouting": {
+    "Servers": [
+      "/ip4/104.236.176.52/tcp/4002/ipfs/QmXdb7tWTxdFEQEFgWBqkuYSrZd3mXrC7HxkD4krGNYx2U",
+      "/ip4/104.236.179.241/tcp/4002/ipfs/QmVRqViDByUxjUMoPnjurjKvZhaEMFDtK35FJXHAM4Lkj6",
+      "/ip4/104.236.151.122/tcp/4002/ipfs/QmSZwGx8Tn8tmcM4PtDJaMeUQNRhNFdBLVGPzRiNaRJtFH",
+      "/ip4/162.243.248.213/tcp/4002/ipfs/QmbHVEEepCi7rn7VL7Exxpd2Ci9NNB6ifvqwhsrbRMgQFP",
+      "/ip4/128.199.219.111/tcp/4002/ipfs/Qmb3brdCYmKG1ycwqCbo6LUwWxTuo3FisnJV2yir7oN92R",
+      "/ip4/104.236.76.40/tcp/4002/ipfs/QmdRBCV8Cz2dGhoKLkD3YjPwVFECmqADQkx5ZteF2c6Fy4",
+      "/ip4/178.62.158.247/tcp/4002/ipfs/QmUdiMPci7YoEUBkyFZAh2pAbjqcPr7LezyiPD2artLw3v",
+      "/ip4/178.62.61.185/tcp/4002/ipfs/QmVw6fGNqBixZE4bewRLT2VXX7fAHUHs8JyidDiJ1P7RUN"
+    ]
+  },
+  "Swarm": {
+    "AddrFilters": null
+  },
+  "Tour": {
+    "Last": ""
+  },
+  "Version": {
+    "AutoUpdate": "minor",
+    "Check": "error",
+    "CheckDate": "0001-01-01T00:00:00Z",
+    "CheckPeriod": "172800000000000",
+    "Current": "0.4.0"
+  }
+}

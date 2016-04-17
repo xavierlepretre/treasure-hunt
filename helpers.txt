@@ -1,0 +1,6 @@
+Proofs ower: 0xa0cc69f1967c4db82af8e26b6b6bf222b2855fc8
+
+Beacon account: 0xa6f32a2f355635b9750244ccecb53b0823667b50
+Dog owner:      0xa6f32a2f355635b9750244ccecb53b0823667b50
+
+Dog walker: 0x10c027fd898576e3b0e06fd3a3cb2aa5f1debc57

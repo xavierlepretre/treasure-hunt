@@ -15,8 +15,6 @@ app.controller("proofsController", [ '$scope', '$location', '$http', '$q', funct
 	getProofInfo(Proofs.deployed(), $scope, $scope.proofInfo);
 	getOwnerAddress(Proofs.deployed(), $scope, $scope.owner);
 	getBeacons(Proofs.deployed(), $scope, $q, $scope.beaconInfos);
-	// listenToNewStores(StoreHub.deployed(), $scope, $scope.stores, $scope.removedStores);
-	// listenToDeletedStores(StoreHub.deployed(), $scope, $scope.stores, $scope.removedStores);
 
 	$scope.addBeacon = function (newBeaconAddress, newBeaconMajor, newBeaconHash) {
 		addBeaconTo(
@@ -53,6 +51,10 @@ app.controller("proofsController", [ '$scope', '$location', '$http', '$q', funct
 			$scope.walkDogAddresses,
 			dogOwnerAccount,
 			newWalkerReward);
+	}
+
+	$scope.init = function() {
+		getIpfsId($scope);
 	}
 
 }]);

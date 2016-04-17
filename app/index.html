@@ -8,7 +8,7 @@
   <script src="./app.js"></script>
   <script src="./proofs.js"></script>
 </head>
-<body ng-app="proofsApp" ng-controller="proofsController">
+<body ng-app="proofsApp" ng-controller="proofsController" ng-init='load()'>
   <h1>Proofs</h1>
   <h2>Default Prover Dapp</h2>
 
@@ -18,15 +18,26 @@
     <tbody>
       <tr>
         <th>Address</th>
-        <td>{{ proofAddress }}</td>
+        <td colspan="2">{{ proofAddress }}</td>
       </tr>
       <tr>
-        <th>Owner Address</th>
-        <td>{{ owner.address }}</td>
+        <th>Balance</th>
+        <td>{{ proofInfo.balance }} Wei</td>
+        <td>{{ proofInfo.balanceInFinney }} Finney</td>
       </tr>
       <tr>
         <th>Min Value</th>
-        <td>{{ proofInfo.minValue }}</td>
+        <td>{{ proofInfo.minValue }} Wei</td>
+        <td>{{ proofInfo.minValueInFinney }} Finney</td>
+      </tr>
+      <tr>
+        <th>Owner Address</th>
+        <td colspan="2">{{ owner.address }}</td>
+      </tr>
+      <tr>
+        <th>Owner Balance</th>
+        <td>{{ owner.balance }} Wei</td>
+        <td>{{ owner.balanceInEther }} Ether</td
       </tr>
     </tbody>
   </table>
@@ -41,13 +52,19 @@
         <th>Hash</th>
         <th>Address</th>
         <th>Actions</th>
+        <th>Balance</th>
+        <th>Balance In Finneys</th>
       </tr>
     </thead>
     <tbody>
       <tr ng-repeat="beaconInfo in beaconInfos" class="beacon">
         <td>{{ beaconInfo.index }}</td>
         <td>{{ beaconInfo.major }}</td>
-        <td>{{ beaconInfo.hash }}</td>
+        <td>
+          <a ng-href="http://localhost:8000/ipfs/{{ beaconInfo.hash }}" target="_self">
+            {{ beaconInfo.hash }}
+          </a>
+        </td>
         <td>
           <a ng-href="/beacon.html?address={{beaconInfo.address}}" target="_self">
             {{ beaconInfo.address }}
@@ -57,11 +74,17 @@
           <button ng-click="fund(beaconInfo.address)">Fund</button>
           <button ng-click="createWalkDog(dogOwnerAccount, newWalkerAddress, beaconInfo.major, newWalkerDuration, newWalkerReward)">Create WalkDog</button>
         </td>
+        <td>
+          {{ beaconInfo.balance }} Wei
+        </td>
+        <td>
+          {{ beaconInfo.balanceInFinney }} Finney
+        </td>
       </tr>
     </tbody>
     <tfoot ng-hide="beaconInfos.length">
       <tr>
-        <td colspan="5">No Beacon Yet</td>
+        <td colspan="7">No Beacon Yet</td>
       </tr>  
     </tfoot>
   </table>

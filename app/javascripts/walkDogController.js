@@ -11,11 +11,13 @@ app.controller("walkDogController", [ '$scope', '$location', '$http', '$q', func
 	$scope.owner = {};
 	$scope.walkDogBalance = web3.eth.getBalance($scope.walkDogAddress);
 	$scope.walkDogInfo = {
-		"value": web3.eth.getBalance($scope.walkDogAddress)
+		"reward": web3.eth.getBalance($scope.walkDogAddress),
+		"rewardInFinney": web3.fromWei(web3.eth.getBalance($scope.walkDogAddress), "finney"),
+		"beaconInfo": {}
 	};
 
 	getOwnerAddress($scope.walkDog, $scope, $scope.owner);
-	getWalkDogInfo($scope.walkDog, $scope, $scope.walkDogInfo);
+	getWalkDogInfo(Proofs.deployed(), $scope.walkDog, $scope, $scope.walkDogInfo);
 
 	$scope.updateMinor = function (newMinor) {
 		updateMinorAt(
