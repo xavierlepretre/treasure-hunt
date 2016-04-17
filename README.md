@@ -7,7 +7,7 @@ The [quick presentation](https://docs.google.com/presentation/d/1_ld1m_6RaDJbTL0
 
 Diagram to explain:
 The top 2, shows the implementation done. The bottom 2 are an extension that uses IPFS in more detail.
-![Diagram](doc/Prove your location.svg.xml.svg)
+![Diagram](https://raw.githubusercontent.com/xavierlepretre/treasure-hunt/master/doc/Prove%20your%20location.svg.xml.svg)
 
 There is one main contract, and any number of satellite contracts in Ethereum.
 The beacon model also puts JSON files in IPFS.
