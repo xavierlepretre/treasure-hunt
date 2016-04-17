@@ -15,9 +15,11 @@ app.controller("walkDogController", [ '$scope', '$location', '$http', '$q', func
 		"rewardInFinney": web3.fromWei(web3.eth.getBalance($scope.walkDogAddress), "finney"),
 		"beaconInfo": {}
 	};
+	$scope.proofInfo = {};
 
 	getOwnerAddress($scope.walkDog, $scope, $scope.owner);
 	getWalkDogInfo(Proofs.deployed(), $scope.walkDog, $scope, $scope.walkDogInfo);
+	getProofInfo(Proofs.deployed(), $scope, $scope.proofInfo);
 
 	$scope.updateMinor = function (newMinor) {
 		updateMinorAt(
@@ -27,11 +29,13 @@ app.controller("walkDogController", [ '$scope', '$location', '$http', '$q', func
 			newMinor);
 	};
 
-	$scope.completeWalk = function () {
+	$scope.completeWalk = function (withOracle) {
 		completeWalkAt(
 			$scope.walkDog, 
 			$scope,
-			$scope.walkDogInfo);
+			$scope.walkDogInfo,
+			withOracle,
+			$scope.proofInfo.minValue);
 	}
 
 }]);

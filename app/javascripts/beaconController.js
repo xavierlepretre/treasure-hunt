@@ -19,11 +19,12 @@ app.controller("beaconController", [ '$scope', '$location', '$http', '$q', funct
 		putTraceUpdate(Proofs.deployed(), $scope, $scope.beaconInfo, traceUpdate, $scope.beaconAddress);
 	};
 
-	$scope.updateHash = function (newBeaconHash) {
+	$scope.updateHash = function (newBeaconMinor, newBeaconHash) {
 		updatePreviousHashAt(
 			Proofs.deployed(), 
 			$scope,
 			$scope.beaconInfo,
+			newBeaconMinor,
 			newBeaconHash);
 	};
 

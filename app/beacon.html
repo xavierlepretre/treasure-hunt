@@ -25,12 +25,44 @@
         <td colspan="2">{{ beaconInfo.major }}</td>
       </tr>
       <tr>
-        <th>Hash</th>
+        <th>Previous Minor</th>
+        <td colspan="2">{{ beaconInfo.previousMinor }}</td>
+      </tr>
+      <tr>
+        <th>Previous Hash</th>
         <td colspan="2">
-          <a ng-href="http://localhost:8000/ipfs/{{ beaconInfo.hash }}" target="_self">
-            {{ beaconInfo.hash }}
+          <a ng-href="http://localhost:8000/ipfs/{{ beaconInfo.previousHash }}" target="_self">
+            {{ beaconInfo.previousHash }}
           </a>
         </td>
+      </tr>
+      <tr>
+        <th>Previous Content</th>
+        <td colspan="2">
+          {{ beaconInfo.previousIpfsContent }}
+        </td>
+      </tr>
+      <tr>
+        <th>Current Minor</th>
+        <td colspan="2">{{ beaconInfo.currentMinor }}</td>
+      </tr>
+      <tr>
+        <th>Current Hash</th>
+        <td colspan="2">
+          <a ng-href="http://localhost:8000/ipfs/{{ beaconInfo.currentHash }}" target="_self">
+            {{ beaconInfo.currentHash }}
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>Current Content</th>
+        <td colspan="2">
+          {{ beaconInfo.currentIpfsContent }}
+        </td>
+      </tr>
+      <tr>
+        <th>Updated</th>
+        <td colspan="2">{{ beaconInfo.updatedTimestamp }}</td>
       </tr>
       <tr>
         <th>Balance</th>
@@ -60,6 +92,14 @@
   <fieldset>
     <legend>Update Hash</legend>
 
+    <label for="newMinor2">New Minor:</label>
+    <input 
+      id="newMinor2" 
+      type="text" 
+      ng-model="newMinor2" 
+      placeholder="Paste a string here..."/>
+
+    <br>
     <label for="newHash">New Hash:</label>
     <input 
       id="newHash" 
@@ -68,7 +108,7 @@
       placeholder="Paste a string here..."/>
 
     <br>
-    <button ng-click="updateHash(newHash)">Update</button>
+    <button ng-click="updateHash(newMinor2, newHash)">Update</button>
 
   </fieldset> 
 

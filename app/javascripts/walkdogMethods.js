@@ -71,6 +71,17 @@ function getWalkDogInfo(proofs, walkDog, $scope, walkDogInfo) {
 				walkDogInfo.minor = minor;
 			});
 		})
+
+	walkDog.minorTimestamp()
+		.catch(function (e) {
+			console.error("Failed to walkDog.minorTimestamp(), " + e);
+		})
+		.then(function (minorTimestamp) {
+			console.log("minorTimestamp " + minorTimestamp);
+			$scope.$apply(function () {
+				walkDogInfo.minorTimestamp = new Date(parseInt(minorTimestamp.toString(), 10) * 1000);
+			});
+		})
 }
 
 function createWalkDogContract(
@@ -125,8 +136,14 @@ function updateMinorAt(walkDog, $scope, walkDogInfo, newMinor) {
 		});
 }
 
-function completeWalkAt(walkDog, $scope, walkDogInfo) {
-	walkDog.completeWalk({ "from": walkDogInfo.walker })
+function completeWalkAt(walkDog, $scope, walkDogInfo, withOracle, value) {
+	var params = { 
+		"from": walkDogInfo.walker, 
+		"value": value
+	};
+	(withOracle 
+		? walkDog.completeWalkOracle(params)
+		: walkDog.completeWalk(params))
 		.catch(function (e) {
 			console.error("Failed to walkDog.completeWalk(), " + e);
 		})

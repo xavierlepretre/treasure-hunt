@@ -49706,7 +49706,13 @@ function getProofInfo(proofs, $scope, proofInfo) {
 * BeaconInfo = {
 *     address,
 *     major,
-*     hash,
+*     previousMinor,
+*     previousHash,
+*     previousIpfsContent,
+*     updatedTimestamp,
+*     currentMinor,
+*     currentHash,
+*     currentIpfsContent,
 *     index	
 *     balance
 *     balanceInFinney
@@ -49739,22 +49745,11 @@ function getBeaconInfoAtIndex(proofs, $scope, beaconInfos, index) {
 				});
 		})
 		.then(function (address) {
-			return proofs.beacons(address)
-				.catch(function (e) {
-					console.error("Failed to proofs.beacons(" + address + "), " + e);
-				})
-				.then(function (beaconInfo) {
-					$scope.$apply(function () {
-						beaconInfos.push({
-							"index": index,
-							"major": web3.toAscii(beaconInfo[0]),
-							"hash": beaconInfo[1],
-							"address": address,
-							"balance": web3.eth.getBalance(address),
-							"balanceInFinney": web3.fromWei(web3.eth.getBalance(address), "finney")
-						});
-					});
-				});
+			var beaconInfo = {
+				"index": index
+			};
+			beaconInfos.push(beaconInfo);
+			return getBeaconInfoAtAddress(proofs, $scope, beaconInfo, address);
 		});
 }
 
@@ -49776,8 +49771,23 @@ function getBeaconInfoAtAddress(proofs, $scope, beaconInfo, address) {
 		.then(function (received) {
 			$scope.$apply(function () {
 				beaconInfo.major = web3.toAscii(received[0]);
-				beaconInfo.hash = received[1];
+				beaconInfo.previousMinor = received[1];
+				beaconInfo.previousHash = received[2];
+				beaconInfo.currentMinor = received[1];
+				beaconInfo.currentHash = received[2];
+				beaconInfo.updatedTimestamp = new Date(parseInt(received[3].toString()) * 1000);
 				beaconInfo.address = address;
+				beaconInfo.balance = web3.eth.getBalance(address);
+				beaconInfo.balanceInFinney = web3.fromWei(beaconInfo.balance, "finney")
+			});
+			ipfs.catText(received[2], function (e, text) {
+				if(e) {
+					console.error("Failed to ipfs.catText(" + received[2] + "), " + e);
+				}
+				$scope.$apply(function () {
+					beaconInfo.previousIpfsContent = text;
+					beaconInfo.currentIpfsContent = text;
+				});
 			});
 		});
 }
@@ -49786,8 +49796,9 @@ function addBeaconTo(proofs, $scope, beaconInfos, adminAccount, newBeaconInfo) {
 	return proofs.addBeacon(
 		newBeaconInfo.address,
 		newBeaconInfo.major,
-		newBeaconInfo.hash,
-		{ from: adminAccount, gas: BOOM_GAS })
+		newBeaconInfo.previousMinor,
+		newBeaconInfo.previousHash,
+		{ "from": adminAccount, "gas": BOOM_GAS })
 		.catch(function (e) {
 			console.error("Failed to proofs.addBeaconTo(" + newBeaconInfo.address 
 				+ ", " + newBeaconInfo.major
@@ -49807,23 +49818,28 @@ function addBeaconTo(proofs, $scope, beaconInfos, adminAccount, newBeaconInfo) {
 				beaconInfos.push({
 					"address": newBeaconInfo.address,
 					"major": newBeaconInfo.major,
-					"hash": newBeaconInfo.hash,
+					"previousMinor": newBeaconInfo.previousMinor,
+					"previousHash": newBeaconInfo.previousHash,
+					"balance": web3.eth.getBalance(newBeaconInfo.address),
+					"balanceInFinney": web3.fromWei(web3.eth.getBalance(newBeaconInfo.address), "finney"),
 					"adding": true
 				});
 			});
 		});	
 }
 
-function updateHashAt(proofs, $scope, beaconInfo, newBeaconHash) {
+function updatePreviousHashAt(proofs, $scope, beaconInfo, newBeaconPreviousMinor, newBeaconPreviousHash) {
 	return proofs.updatePrevious(
-		newBeaconHash,
-		{ from: beaconInfo.address, gas: BOOM_GAS })
+		newBeaconPreviousMinor,
+		newBeaconPreviousHash,
+		{ "from": beaconInfo.address, "gas": BOOM_GAS })
 		.catch(function (e) {
-			console.error("Failed to proofs.updatePrevious(" + beaconInfo.address + "), " + e);
+			console.error("Failed to proofs.updatePrevious(" + newBeaconPreviousHash + "), " + e);
 		})
 		.then(function (txn) {
 			$scope.$apply(function () {
-				beaconInfo.hash = newBeaconHash;
+				beaconInfo.previousMinor = newBeaconPreviousMinor;
+				beaconInfo.previousHash = newBeaconPreviousHash;
 			});
 		});
 }
@@ -49902,6 +49918,17 @@ function getWalkDogInfo(proofs, walkDog, $scope, walkDogInfo) {
 				walkDogInfo.minor = minor;
 			});
 		})
+
+	walkDog.minorTimestamp()
+		.catch(function (e) {
+			console.error("Failed to walkDog.minorTimestamp(), " + e);
+		})
+		.then(function (minorTimestamp) {
+			console.log("minorTimestamp " + minorTimestamp);
+			$scope.$apply(function () {
+				walkDogInfo.minorTimestamp = new Date(parseInt(minorTimestamp.toString(), 10) * 1000);
+			});
+		})
 }
 
 function createWalkDogContract(
@@ -49956,8 +49983,14 @@ function updateMinorAt(walkDog, $scope, walkDogInfo, newMinor) {
 		});
 }
 
-function completeWalkAt(walkDog, $scope, walkDogInfo) {
-	walkDog.completeWalk({ "from": walkDogInfo.walker })
+function completeWalkAt(walkDog, $scope, walkDogInfo, withOracle, value) {
+	var params = { 
+		"from": walkDogInfo.walker, 
+		"value": value
+	};
+	(withOracle 
+		? walkDog.completeWalkOracle(params)
+		: walkDog.completeWalk(params))
 		.catch(function (e) {
 			console.error("Failed to walkDog.completeWalk(), " + e);
 		})
@@ -49983,9 +50016,11 @@ app.controller("walkDogController", [ '$scope', '$location', '$http', '$q', func
 		"rewardInFinney": web3.fromWei(web3.eth.getBalance($scope.walkDogAddress), "finney"),
 		"beaconInfo": {}
 	};
+	$scope.proofInfo = {};
 
 	getOwnerAddress($scope.walkDog, $scope, $scope.owner);
 	getWalkDogInfo(Proofs.deployed(), $scope.walkDog, $scope, $scope.walkDogInfo);
+	getProofInfo(Proofs.deployed(), $scope, $scope.proofInfo);
 
 	$scope.updateMinor = function (newMinor) {
 		updateMinorAt(
@@ -49995,11 +50030,13 @@ app.controller("walkDogController", [ '$scope', '$location', '$http', '$q', func
 			newMinor);
 	};
 
-	$scope.completeWalk = function () {
+	$scope.completeWalk = function (withOracle) {
 		completeWalkAt(
 			$scope.walkDog, 
 			$scope,
-			$scope.walkDogInfo);
+			$scope.walkDogInfo,
+			withOracle,
+			$scope.proofInfo.minValue);
 	}
 
 }]);

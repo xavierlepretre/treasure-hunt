@@ -1,3 +1,4 @@
 contract NeedProof {
-	function prove(string _hash);
+	function prove(string _minor);
+	function proveOracle(string _hash);
 }

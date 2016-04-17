@@ -49,7 +49,9 @@
       <tr>
         <th>Index</th>
         <th>Major</th>
-        <th>Hash</th>
+        <th>Previous Minor</th>
+        <th>Previous Hash</th>
+        <th>Updated</th>
         <th>Address</th>
         <th>Actions</th>
         <th>Balance</th>
@@ -60,11 +62,13 @@
       <tr ng-repeat="beaconInfo in beaconInfos" class="beacon">
         <td>{{ beaconInfo.index }}</td>
         <td>{{ beaconInfo.major }}</td>
+        <td>{{ beaconInfo.previousMinor }}</td>
         <td>
           <a ng-href="http://localhost:8000/ipfs/{{ beaconInfo.hash }}" target="_self">
-            {{ beaconInfo.hash }}
+            {{ beaconInfo.previousHash }}
           </a>
         </td>
+        <td>{{ beaconInfo.updatedTimestamp }}</td>
         <td>
           <a ng-href="/beacon.html?address={{beaconInfo.address}}" target="_self">
             {{ beaconInfo.address }}
@@ -84,7 +88,7 @@
     </tbody>
     <tfoot ng-hide="beaconInfos.length">
       <tr>
-        <td colspan="7">No Beacon Yet</td>
+        <td colspan="9">No Beacon Yet</td>
       </tr>  
     </tfoot>
   </table>
@@ -126,6 +130,14 @@
       placeholder="Paste a string here..."/>
 
     <br/>
+    <label for="newBeaconMinor">Minor:</label>
+    <input 
+      id="newBeaconMinor" 
+      type="text" 
+      ng-model="newBeaconMinor" 
+      placeholder="Paste a string here..."/>
+
+    <br/>
     <label for="newBeaconHash">Hash:</label>
     <input 
       id="newBeaconHash" 
@@ -142,7 +154,7 @@
       placeholder="Paste an address here..."/>
 
     <br/>
-    <button ng-click="addBeacon(newBeaconAddress, newBeaconMajor, newBeaconHash)">Add Beacon</button>
+    <button ng-click="addBeacon(newBeaconAddress, newBeaconMajor, newBeaconMinor, newBeaconHash)">Add Beacon</button>
 
   </fieldset> 
 

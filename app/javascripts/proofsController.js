@@ -16,7 +16,7 @@ app.controller("proofsController", [ '$scope', '$location', '$http', '$q', funct
 	getOwnerAddress(Proofs.deployed(), $scope, $scope.owner);
 	getBeacons(Proofs.deployed(), $scope, $q, $scope.beaconInfos);
 
-	$scope.addBeacon = function (newBeaconAddress, newBeaconMajor, newBeaconHash) {
+	$scope.addBeacon = function (newBeaconAddress, newBeaconMajor, newBeaconMinor, newBeaconHash) {
 		addBeaconTo(
 			Proofs.deployed(), 
 			$scope,
@@ -25,7 +25,8 @@ app.controller("proofsController", [ '$scope', '$location', '$http', '$q', funct
 			{
 				"address": newBeaconAddress,
 				"major": newBeaconMajor,
-				"hash": newBeaconHash
+				"previousMinor": newBeaconMinor,
+				"previousHash": newBeaconHash
 			});
 	};
 

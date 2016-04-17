@@ -56,6 +56,10 @@
         <th>Minor</th>
         <td colspan="2">{{ walkDogInfo.minor }}</td>
       </tr>
+      <tr>
+        <th>Timestamp</th>
+        <td colspan="2">{{ walkDogInfo.minorTimestamp }}</td>
+      </tr>
     </thead>
   </table>
 
@@ -76,12 +80,20 @@
         <td>{{ walkDogInfo.beaconInfo.major }}</td>
       </tr>
       <tr>
+        <th>Previous Minor</th>
+        <td>{{ walkDogInfo.beaconInfo.previousMinor }}</td>
+      </tr>
+      <tr>
         <th>Previous Hash</th>
         <td>
           <a ng-href="http://localhost:8000/ipfs/{{ walkDogInfo.beaconInfo.hash }}" target="_self">
-            {{ walkDogInfo.beaconInfo.hash }}
+            {{ walkDogInfo.beaconInfo.previousHash }}
           </a>
         </td>
+      </tr>
+      <tr>
+        <th>Updated</th>
+        <td colspan="2">{{ walkDogInfo.beaconInfo.updatedTimestamp }}</td>
       </tr>
     </tbody>
   </table>
@@ -106,7 +118,11 @@
   <fieldset>
     <legend>Complete Walk</legend>
 
-    <button ng-click="completeWalk()">Complete Walk</button>
+    <button ng-click="completeWalk(withOracle)">Complete Walk</button>
+
+    <br/>
+    <label for="withOracle">With Oracle</label>
+    <input id="withOracle" type="checkbox" ng-model="withOracle">
 
   </fieldset> 
 

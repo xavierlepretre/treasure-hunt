@@ -49697,7 +49697,13 @@ function getProofInfo(proofs, $scope, proofInfo) {
 * BeaconInfo = {
 *     address,
 *     major,
-*     hash,
+*     previousMinor,
+*     previousHash,
+*     previousIpfsContent,
+*     updatedTimestamp,
+*     currentMinor,
+*     currentHash,
+*     currentIpfsContent,
 *     index	
 *     balance
 *     balanceInFinney
@@ -49730,22 +49736,11 @@ function getBeaconInfoAtIndex(proofs, $scope, beaconInfos, index) {
 				});
 		})
 		.then(function (address) {
-			return proofs.beacons(address)
-				.catch(function (e) {
-					console.error("Failed to proofs.beacons(" + address + "), " + e);
-				})
-				.then(function (beaconInfo) {
-					$scope.$apply(function () {
-						beaconInfos.push({
-							"index": index,
-							"major": web3.toAscii(beaconInfo[0]),
-							"hash": beaconInfo[1],
-							"address": address,
-							"balance": web3.eth.getBalance(address),
-							"balanceInFinney": web3.fromWei(web3.eth.getBalance(address), "finney")
-						});
-					});
-				});
+			var beaconInfo = {
+				"index": index
+			};
+			beaconInfos.push(beaconInfo);
+			return getBeaconInfoAtAddress(proofs, $scope, beaconInfo, address);
 		});
 }
 
@@ -49767,8 +49762,23 @@ function getBeaconInfoAtAddress(proofs, $scope, beaconInfo, address) {
 		.then(function (received) {
 			$scope.$apply(function () {
 				beaconInfo.major = web3.toAscii(received[0]);
-				beaconInfo.hash = received[1];
+				beaconInfo.previousMinor = received[1];
+				beaconInfo.previousHash = received[2];
+				beaconInfo.currentMinor = received[1];
+				beaconInfo.currentHash = received[2];
+				beaconInfo.updatedTimestamp = new Date(parseInt(received[3].toString()) * 1000);
 				beaconInfo.address = address;
+				beaconInfo.balance = web3.eth.getBalance(address);
+				beaconInfo.balanceInFinney = web3.fromWei(beaconInfo.balance, "finney")
+			});
+			ipfs.catText(received[2], function (e, text) {
+				if(e) {
+					console.error("Failed to ipfs.catText(" + received[2] + "), " + e);
+				}
+				$scope.$apply(function () {
+					beaconInfo.previousIpfsContent = text;
+					beaconInfo.currentIpfsContent = text;
+				});
 			});
 		});
 }
@@ -49777,8 +49787,9 @@ function addBeaconTo(proofs, $scope, beaconInfos, adminAccount, newBeaconInfo) {
 	return proofs.addBeacon(
 		newBeaconInfo.address,
 		newBeaconInfo.major,
-		newBeaconInfo.hash,
-		{ from: adminAccount, gas: BOOM_GAS })
+		newBeaconInfo.previousMinor,
+		newBeaconInfo.previousHash,
+		{ "from": adminAccount, "gas": BOOM_GAS })
 		.catch(function (e) {
 			console.error("Failed to proofs.addBeaconTo(" + newBeaconInfo.address 
 				+ ", " + newBeaconInfo.major
@@ -49798,23 +49809,28 @@ function addBeaconTo(proofs, $scope, beaconInfos, adminAccount, newBeaconInfo) {
 				beaconInfos.push({
 					"address": newBeaconInfo.address,
 					"major": newBeaconInfo.major,
-					"hash": newBeaconInfo.hash,
+					"previousMinor": newBeaconInfo.previousMinor,
+					"previousHash": newBeaconInfo.previousHash,
+					"balance": web3.eth.getBalance(newBeaconInfo.address),
+					"balanceInFinney": web3.fromWei(web3.eth.getBalance(newBeaconInfo.address), "finney"),
 					"adding": true
 				});
 			});
 		});	
 }
 
-function updateHashAt(proofs, $scope, beaconInfo, newBeaconHash) {
+function updatePreviousHashAt(proofs, $scope, beaconInfo, newBeaconPreviousMinor, newBeaconPreviousHash) {
 	return proofs.updatePrevious(
-		newBeaconHash,
-		{ from: beaconInfo.address, gas: BOOM_GAS })
+		newBeaconPreviousMinor,
+		newBeaconPreviousHash,
+		{ "from": beaconInfo.address, "gas": BOOM_GAS })
 		.catch(function (e) {
-			console.error("Failed to proofs.updatePrevious(" + beaconInfo.address + "), " + e);
+			console.error("Failed to proofs.updatePrevious(" + newBeaconPreviousHash + "), " + e);
 		})
 		.then(function (txn) {
 			$scope.$apply(function () {
-				beaconInfo.hash = newBeaconHash;
+				beaconInfo.previousMinor = newBeaconPreviousMinor;
+				beaconInfo.previousHash = newBeaconPreviousHash;
 			});
 		});
 }
@@ -49824,7 +49840,8 @@ function updateHashAt(proofs, $scope, beaconInfo, newBeaconHash) {
 * BeaconInfo = {
 *     address,
 *     major,
-*     hash,
+*     previousHash,
+*     currentHash,
 *     index	
 *     balance
 *     balanceInFinney
@@ -49842,7 +49859,7 @@ function createTraceUpdate(beaconInfo, newBeaconMinor) {
 		"major": beaconInfo.major,
 		"minor": newBeaconMinor,
 		"timestamp": web3.eth.getBlock().timestamp,
-		"previousHash": beaconInfo.hash
+		"previousHash": beaconInfo.currentHash
 	};
 }
 
@@ -49850,16 +49867,22 @@ function putTraceUpdate(proofs, $scope, beaconInfo, traceUpdate, beaconAddress) 
 	// First we put the current hash into the proofs
 	proofs.updatePrevious
 		(
-			beaconInfo.hash,
+			beaconInfo.currentMinor,
+			beaconInfo.currentHash,
 			{
 				"from": beaconAddress,
 				"gas": BOOM_GAS
 			}
 		)
 		.catch(function(e) {
-			console.error("Failed to proofs.updatePrevious(" + beaconInfo.hash + "), " + e);
+			console.error("Failed to proofs.updatePrevious(" + 
+				beaconInfo.previousMinor + ", " + beaconInfo.previousHash + "), " + e);
 		})
 		.then(function (result) {
+			beaconInfo.previousMinor = beaconInfo.currentMinor;
+			beaconInfo.previousHash = beaconInfo.currentHash;
+			beaconInfo.previousIpfsContent = beaconInfo.currentIpfsContent;
+			beaconInfo.updatedTimestamp = new Date();
 			var string = JSON.stringify(traceUpdate);
 			console.log("Sending to IPFS: " + string);
 			// Next we put the new hash in the buffer object
@@ -49872,7 +49895,16 @@ function putTraceUpdate(proofs, $scope, beaconInfo, traceUpdate, beaconAddress) 
 					console.log(hash);
 					if (hash) {
 						$scope.$apply(function () {
-							beaconInfo.hash = hash;
+							beaconInfo.currentMinor = traceUpdate.minor;
+							beaconInfo.currentHash = hash;
+						});
+						ipfs.catText(hash, function (e, text) {
+							if(e) {
+								console.error("Failed to ipfs.catText(" + hash + "), " + e);
+							}
+							$scope.$apply(function () {
+								beaconInfo.currentIpfsContent = text;
+							});
 						});
 					}
 				});
@@ -49900,11 +49932,12 @@ app.controller("beaconController", [ '$scope', '$location', '$http', '$q', funct
 		putTraceUpdate(Proofs.deployed(), $scope, $scope.beaconInfo, traceUpdate, $scope.beaconAddress);
 	};
 
-	$scope.updateHash = function (newBeaconHash) {
-		updateHashAt(
+	$scope.updateHash = function (newBeaconMinor, newBeaconHash) {
+		updatePreviousHashAt(
 			Proofs.deployed(), 
 			$scope,
 			$scope.beaconInfo,
+			newBeaconMinor,
 			newBeaconHash);
 	};
 

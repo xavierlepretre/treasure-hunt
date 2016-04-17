@@ -17,6 +17,7 @@ contract WalkDog is UsingOraclize {
 		proof = _proof;
 		major = _major;
 		timeLimit = _timeLimit;
+		minorTimestamp = _timeLimit;
 	}
 
 	modifier onlyOwner() {
@@ -51,20 +52,29 @@ contract WalkDog is UsingOraclize {
 		onlyWalker() {
 		minor = _minor;
 		minorTimestamp = now;
+		if (timeLimit < minorTimestamp) {
+			suicide(owner);
+		}
 	}
 
 	function completeWalk() {
 		Prover(proof).proveMe.value(msg.value)(major, minorTimestamp);
 	}
 
-	function prove(string _hash) 
+	function prove(string _minor) 
 		onlyProof() {
-		if (now <= timeLimit)
-		{
-			oraclize_query("URL", strConcat("json(http://gateway.ipfs.io/ipfs/", _hash, ")"));
-		} else {
-			kill();
+		if (strCompare(minor, _minor) == 0) {
+			suicide(walker);
 		}
+	}
+
+	function completeWalkOracle() {
+		Prover(proof).proveMeOracle.value(msg.value)(major, minorTimestamp);
+	}
+
+	function proveOracle(string _hash) 
+		onlyProof() {
+		oraclize_query("URL", strConcat("json(http://gateway.ipfs.io/ipfs/", _hash, ").minor"));
 	}
 
 	function __callback(bytes32 myid, string _minor) 
@@ -76,7 +86,7 @@ contract WalkDog is UsingOraclize {
 	}
 
 	function kill() {
-		if (timeLimit < now) {
+		if (timeLimit < minorTimestamp) {
 			suicide(owner);
 		}		
 	}

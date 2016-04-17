@@ -5,7 +5,7 @@
 (function() {
 
   var contract_data = {
-    abi: [{"constant":false,"inputs":[{"name":"_hash","type":"string"}],"name":"prove","outputs":[],"type":"function"}],
+    abi: [{"constant":false,"inputs":[{"name":"_hash","type":"string"}],"name":"proveOracle","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"_minor","type":"string"}],"name":"prove","outputs":[],"type":"function"}],
     binary: "",
     unlinked_binary: "",
     address: "",
