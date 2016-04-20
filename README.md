@@ -53,10 +53,10 @@ Found [here](https://docs.google.com/presentation/d/1_ld1m_6RaDJbTL0cCeuPJoD8wdN
 
 ### Diagrams
 The first idea was to use IPFS fully to store temporary secrets, then use Oraclize to fetch them in order to prove precedence. For the sake of time, we skipped the Oraclize part, and created a system as per this:
-![Diagram as done](https://raw.githubusercontent.com/xavierlepretre/treasure-hunt/master/doc/Prove%20your%20location.svg.xml.svg)
+[Diagram as done](https://github.com/xavierlepretre/treasure-hunt/blob/master/doc/Prove%20your%20location.svg.xml.svg)
 
 Had the larger system been done, it would have looked like this:
-![Diagram that could have been done](https://raw.githubusercontent.com/xavierlepretre/treasure-hunt/master/doc/Prove%20your%20location%20with%20IPFS.svg.xml.svg)
+[Diagram that could have been done](https://github.com/xavierlepretre/treasure-hunt/blob/master/doc/Prove%20your%20location%20with%20IPFS.svg.xml.svg)
 
 ### Smart contracts
 * `Prover` contract interface, which is meant to be called by `NeedProof` contracts.
